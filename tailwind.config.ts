@@ -8,15 +8,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        powder: "#B9D3E6",
-        charcoal: "#1C1C1C",
-        warmwhite: "#F9F8F5",
-        mist: "#E3E6E8",
-        taupe: "#B8A895"
+        cream:  "#FAF6F3",
+        cocoa:  "#8B5B4A",
+        coral:  "#E6A49E",
+        mist:   "#E9E4DE",
+        ink:    "#3C2F2B"
       },
-      borderRadius: {
-        '2xl': '1rem'
-      }
+      fontFamily: {
+        serif: ["var(--font-serif)"],
+        sans: ["var(--font-sans)"],
+      },
+      borderRadius: { '2xl': '1rem' }
     },
   },
   plugins: [],
