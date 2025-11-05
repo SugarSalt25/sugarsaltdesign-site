@@ -1,1 +1,13 @@
-@keyframes float { 0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}} .animate-float{animation:float 6s ease-in-out infinite;}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Float animation for the seahorse watermark */
+@keyframes floaty {
+  0%   { transform: translateY(0px) }
+  50%  { transform: translateY(-6px) }
+  100% { transform: translateY(0px) }
+}
+.animate-float {
+  animation: floaty 5.5s ease-in-out infinite;
+}
