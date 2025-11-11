@@ -1,37 +1,27 @@
-import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
 export async function POST(req: Request) {
   try {
-    const form = await req.formData();
-    const name = String(form.get("name") || "");
-    const email = String(form.get("email") || "");
-    const message = String(form.get("message") || "");
+    const { name, email, message } = await req.json();
 
-    const TO = process.env.CONTACT_TO || "";
-    const resendKey = process.env.RESEND_API_KEY || "";
-
-    if (!TO) return NextResponse.json({ ok: false, error: "CONTACT_TO not set" }, { status: 500 });
-    const recipients = TO.split(",").map(s => s.trim()).filter(Boolean);
-
-    if (!resendKey) {
-      // Fallback: log-only if no key
-      console.log("Contact submission (no RESEND key):", { name, email, message, recipients });
-      return NextResponse.redirect("/", { status: 302 });
+    if (!name || !email || !message) {
+      return new Response("Missing fields", { status: 400 });
     }
 
-    const resend = new Resend(resendKey);
+    const resend = new Resend(process.env.RESEND_API_KEY!);
+    const toEmail = process.env.contact_to || "askanything@sugarsaltdesign.com";
+
     await resend.emails.send({
-      from: "noreply@sugarsaltdesign.com",
-      to: recipients,
-      subject: `New enquiry from sugarsaltdesign.com — ${name}`,
+      from: "Sugar Salt Designs <hello@sugarsaltdesign.com>",
+      to: [toEmail],
       reply_to: email,
-      text: `From: ${name} <${email}>\n\n${message}`
+      subject: `New enquiry from ${name}`,
+      text: `From: ${name} <${email}>\n\n${message}`,
     });
 
-    return NextResponse.redirect("/", { status: 302 });
-  } catch (e) {
-    console.error(e);
-    return NextResponse.json({ ok: false, error: "Server error" }, { status: 500 });
+    return Response.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    return new Response("Email failed", { status: 500 });
   }
 }
